@@ -17,7 +17,7 @@ class User:
             if user==username and __password==password:
                 login=True
 
-    def Checkfollowers(self,followers):
+    def Checkfollowers(self):
         print(f"You have {self.followers} followers")
 
     def create_post(self,content,title):
