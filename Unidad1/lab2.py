@@ -7,7 +7,7 @@ class User:
         self.followers=followers 
 
     #Methods
-    def login(self,name,__password):
+    def login(self,__password):
         login=False
         user=self.name
         __password=self.__password
@@ -42,7 +42,7 @@ class Post:
     def Checkinfo(self):
         print(f"{self.title}\n{self.content}\n{self.likes} likes\to {self.author}")
 
-    def like(self,likes):
+    def like(self):
         self.likes+=1
         return(self.likes)
 
