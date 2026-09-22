@@ -8,7 +8,7 @@ class BankAccount:
 
   def ProcessPayment(self,method):
     withdrawal=0
-    print (f"Current account balance: {self.__balance}")
+    print (f"Current account balance: {self.__balance}") 
     match method.name:
         case "creditcard":
             print(f"The payment will be of $300")
