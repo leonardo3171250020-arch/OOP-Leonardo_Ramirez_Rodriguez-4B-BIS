@@ -3,12 +3,17 @@ from tkinter import ttk
 import os 
 from abc import ABC, abstractmethod #
 
+log=[]
 class SmartDevice(ABC):
     def __init__(self,name: str):
         self.name=name
  
     @abstractmethod
     def turn_on(self):
+        pass
+
+    @abstractmethod
+    def turn_off(self):
         pass
 
 class SmartSpeaker(SmartDevice):
@@ -18,12 +23,18 @@ class SmartSpeaker(SmartDevice):
     def turn_on(self):
         return f"{self.name}, is playing Lofi music at volume 20%"
 
+    def turn_off(self):
+        return f"{self.name}, is turning off"
+
 class SmartPhone(SmartDevice):
     def __init__(self):
         super().__init__("Iphone 11")
 
     def turn_on(self):
         return f"{self.name}, is in perfect condition"
+
+    def turn_off(self):
+        return f"{self.name} is entering sleep mode"
 
 class SmartTV(SmartDevice):
     def __init__(self):
@@ -32,13 +43,26 @@ class SmartTV(SmartDevice):
     def turn_on(self):
         return f"{self.name} is boradcatsting the  news channel"
 
+    def turn_off(self):
+        return f"{self.name} is ceasing activities"
+
+class SmartWatch(SmartDevice):
+    def __init__(self):
+        super().__init__("SsmartWatch 12")
+
+    def turn_on(self):
+        return f"{self.name} is on, the current hour is 13:40"
+
+    def turn_off(self):
+        return f"{self.name} entering sleep mode, have a good day!"
+    
 class SmartHomeApp(tk.Tk):
     def __init__(self):
         super().__init__()
 
         # --- 1. WINDOW SETTINGS---
         self.title("Lab 6: Polymosrphism waith GUI by Leonardo Ramirez Rodriguez")
-        self.geometry("480x360")
+        self.geometry("960x720")
         self.resizable(False, False)
 
         current_dir=os.path.dirname(os.path.abspath(__file__))
@@ -56,6 +80,7 @@ class SmartHomeApp(tk.Tk):
             "Speaker": SmartSpeaker(),
             "Phone ": SmartPhone(),
             "TV": SmartTV(),
+            "Watch": SmartWatch(),
         }
 
         # Build visual components
@@ -81,6 +106,16 @@ class SmartHomeApp(tk.Tk):
         )
         group_box.pack(fill="x", padx=20, pady=5)
 
+        log_frame = tk.LabelFrame(self, text=" Activity Log ", font=("Arial", 11, "bold"))
+        log_frame.pack(fill="both", expand=True, padx=20, pady=10)
+
+        self.log_list = tk.Listbox(log_frame, height=5, font=("Consolas", 10))
+        self.log_list.pack(side="left", fill="both", expand=True)
+
+        scrollbar = tk.Scrollbar(log_frame, command=self.log_list.yview)
+        scrollbar.pack(side="right", fill="y")
+        self.log_list.config(yscrollcommand=scrollbar.set)
+        
         # Default selection: first key in dictionary
         first_key = list(self.items.keys())[0]
         self.selected_key = tk.StringVar(value=first_key)
@@ -110,6 +145,33 @@ class SmartHomeApp(tk.Tk):
         )
         btn_action.pack(pady=15)
 
+        btn_action = tk.Button(
+            self,
+            text="Turn off device",
+            command=self._stop_action,
+            bg="#2980b9",
+            fg="white",
+            font=("Arial", 10, "bold"),
+            relief="raised",
+            cursor="hand2",
+            padx=12,
+            pady=6
+        )
+        btn_action.pack(pady=15)
+
+        btn_action = tk.Button(
+            self,
+            text="Show activity log",
+            command=self._log_action,
+            bg="#2980b9",
+            fg="white",
+            font=("Arial", 10, "bold"),
+            relief="raised",
+            cursor="hand2",
+            padx=12,
+            pady=6
+        )
+        btn_action.pack(pady=15)
         # Output / Results Box
         self.lbl_output = tk.Label(
             self,
@@ -134,12 +196,35 @@ class SmartHomeApp(tk.Tk):
         # 3. POLYMORPHIC EXECUTION:
         # No 'if/elif' logic needed. Python runs the appropriate implementation!
         result_message = active_object.turn_on()
+        log.append(f"{active_object.name} was turned on\n")
 
         # 4. Display result in the UI
         self.lbl_output.config(text=result_message, font=("Arial", 10, "normal"))
 
+    def _stop_action(self):
+        # 1. Get the current key selected by the user
+        chosen_key = self.selected_key.get()
 
+        # 2. Retrieve the active polymorphic object
+        active_object: SmartDevice = self.items[chosen_key]
 
+        # 3. POLYMORPHIC EXECUTION:
+        # No 'if/elif' logic needed. Python runs the appropriate implementation!
+        result_message = active_object.turn_off()
+        log.append(f"{active_object.name} was turned off\n")
+
+        # 4. Display result in the UI
+        self.lbl_output.config(text=result_message, font=("Arial", 10, "normal"))
+
+    def _log_action(self):
+        result_message = log
+
+        # 4. Display result in the UI
+        self.log_list.delete(0, "end")
+        for i in result_message:
+            self.log_list.insert("end", i)
+            self.log_list.insert("end", "") 
+        
 # LAUNCHER
 if __name__ == "__main__":
     app = SmartHomeApp()
