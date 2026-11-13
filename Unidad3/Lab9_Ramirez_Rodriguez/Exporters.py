@@ -9,28 +9,25 @@ class Exportador:
 
 class ExportadorTXT(Exportador):
     def exportar(self, datos, ruta_archivo):
-        with open(ruta_archivo, 'w', encoding='utf-8') as file:
+        with open(ruta_archivo, 'C:/Users/Leonardo/Desktop/ejemplo', encoding='utf-8') as file:
             file.write("--- REPORTE DE PRODUCTOS ---\n")
             for producto in datos:
                 # Ajustar los índices según cómo su Modelo retorna los datos de la BD
                 file.write(f"ID: {producto[0]} | Nombre: {producto[1]} | Precio: ${producto[2]}\n")
-        print(f"Archivo TXT generado en: {ruta_archivo}")
+        print(f"Archivo TXT generado en:{ruta_archivo}")
 
-# TODO: Implementar ExportadorCSV (heredando de Exportador)
 class CSVexporter(Exportador):
     def export(self, datos, ruta_archivo):
-        with open(ruta_archivo, 'w', newline = '', econding= 'utf-8') as f:
+        with open(ruta_archivo, 'C:/Users/Leonardo/Desktop/ejemplo', newline = '', econding= 'utf-8') as f:
             writer = csv.writer(f)
             writer.writerow('ID', 'PRODUCT', 'STOCK')
             writer.writerows(datos)
-# TODO: Implementar ExportadorJSON (heredando de Exportador)
+
 class JSONexporter(Exportador):
     def export(self, datos_f, ruta_archivo):
         datos_f=({"id": p[0], "product": p[1], "price": p[2], "stock": p[3]} for p in datos_f)
-        with open(ruta_archivo, 'w', newline = '', econding= 'utf-8') as f:
+        with open(ruta_archivo, 'C:/Users/Leonardo/Desktop/ejemplo', newline = '', econding= 'utf-8') as f:
             json.dump(datos_f, f, indent=4, ensuer_ascii=False)
-
-
 
 class ExportadorPDF(Exportador):
     def exportar(self, datos, ruta_archivo):
